@@ -1,12 +1,6 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.DATABASE_URL;
-
-if (!MONGODB_URI) {
-    throw new Error(
-        'Please define the DATABASE_URL environment variable inside .env'
-    );
-}
+const MONGODB_URI = process.env.MONGODB_URI || process.env.DATABASE_URL;
 
 interface MongooseCache {
     conn: typeof mongoose | null;
@@ -24,6 +18,12 @@ if (!cached) {
 }
 
 async function dbConnect() {
+    if (!MONGODB_URI) {
+        throw new Error(
+            'Please define the MONGODB_URI or DATABASE_URL environment variable'
+        );
+    }
+
     if (cached.conn) {
         return cached.conn;
     }
