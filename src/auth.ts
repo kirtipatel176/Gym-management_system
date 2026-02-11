@@ -60,7 +60,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             // Expose token data to client session
             if (token && session.user) {
                 session.user.id = token.id as string
-                session.user.role = token.role as string
+                session.user.role = token.role as any
                 session.user.subscriptionStatus = token.subscriptionStatus as string
                 session.user.planId = token.planId as string
                 session.user.currentPeriodEnd = token.currentPeriodEnd as Date

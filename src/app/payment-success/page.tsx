@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { motion } from "framer-motion"
 import { CheckCircle, Loader2 } from "lucide-react"
@@ -11,7 +11,6 @@ import Confetti from 'react-confetti'
 
 export default function PaymentSuccessPage() {
     const router = useRouter()
-    const searchParams = useSearchParams()
     const { update } = useSession()
     const [countdown, setCountdown] = useState(5)
     const [showConfetti, setShowConfetti] = useState(true)

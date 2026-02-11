@@ -1,11 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { signIn } from "next-auth/react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Eye, EyeOff, Loader2, AlertCircle, ArrowRight, Github } from "lucide-react"
 
@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import Link from "next/link"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { LoginAlerts } from "./LoginAlerts"
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -30,14 +31,11 @@ const loginSchema = z.object({
 
 export default function LoginPage() {
     const router = useRouter()
-    const searchParams = useSearchParams()
     const [showPassword, setShowPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    // Check for errors or messages in URL
-    const urlError = searchParams.get("error")
-    const registered = searchParams.get("registered")
+
 
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -51,7 +49,7 @@ export default function LoginPage() {
         setIsLoading(true)
         setError(null)
         try {
-            const callbackUrl = searchParams.get("callbackUrl") || "/";
+            const callbackUrl = "/";
 
             const result = await signIn("credentials", {
                 email: values.email,
@@ -89,25 +87,18 @@ export default function LoginPage() {
                 </p>
             </div>
 
-            {registered && (
-                <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-6 p-4 rounded-lg bg-green-50 text-green-700 border border-green-200 text-sm flex items-center gap-2"
-                >
-                    <div className="h-2 w-2 rounded-full bg-green-500" />
-                    Account created successfully! Please sign in.
-                </motion.div>
-            )}
+            <Suspense fallback={<div className="mb-6" />}>
+                <LoginAlerts />
+            </Suspense>
 
-            {(error || urlError) && (
+            {error && (
                 <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-6 p-4 rounded-lg bg-red-50 text-red-700 border border-red-200 text-sm flex items-center gap-2"
                 >
                     <AlertCircle className="h-4 w-4" />
-                    {error || (urlError === "CredentialsSignin" ? "Invalid email or password" : "Authentication failed")}
+                    {error}
                 </motion.div>
             )}
 
