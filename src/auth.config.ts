@@ -29,7 +29,7 @@ export const authConfig = {
                 session.user.status = token.status as string
                 session.user.subscriptionStatus = token.subscriptionStatus as string
                 session.user.planId = token.planId as string
-                session.user.currentPeriodEnd = token.currentPeriodEnd as string
+                session.user.currentPeriodEnd = token.currentPeriodEnd as Date
             }
             return session
         },

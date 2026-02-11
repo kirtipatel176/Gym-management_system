@@ -30,7 +30,7 @@ const registerSchema = z.object({
     phone: z.string().min(10, "Phone number must be at least 10 digits"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string(),
-    role: z.enum(ROLES as unknown as [string, ...string[]]),
+    role: z.enum(["MEMBER", "TRAINER"]),
 }).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],

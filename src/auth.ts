@@ -36,7 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                             role: user.role,
                             subscriptionStatus: user.subscriptionStatus,
                             planId: user.planId,
-                            currentPeriodEnd: user.currentPeriodEnd?.toISOString(),
+                            currentPeriodEnd: user.currentPeriodEnd,
                         }
                     }
                 }
@@ -63,7 +63,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 session.user.role = token.role as string
                 session.user.subscriptionStatus = token.subscriptionStatus as string
                 session.user.planId = token.planId as string
-                session.user.currentPeriodEnd = token.currentPeriodEnd as string
+                session.user.currentPeriodEnd = token.currentPeriodEnd as Date
             }
             return session
         },
