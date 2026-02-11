@@ -15,6 +15,10 @@ declare module "next-auth" {
         id: string
         phone?: string
         status?: string
+        subscriptionStatus?: string
+        subscriptionId?: string
+        planId?: string
+        currentPeriodEnd?: Date
     }
 }
 

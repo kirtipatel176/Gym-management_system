@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
                 if (user) {
                     user.subscriptionStatus = subscription.status as any;
                     user.subscriptionId = subscription.id;
-                    user.currentPeriodEnd = new Date(subscription.current_period_end * 1000);
+                    user.currentPeriodEnd = new Date((subscription as any).current_period_end * 1000);
                     await user.save();
                     console.log(`[WEBHOOK] ✅ User ${user._id} subscription created: ${subscription.status}`);
                 } else {
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
 
                 if (user) {
                     user.subscriptionStatus = subscription.status as any;
-                    user.currentPeriodEnd = new Date(subscription.current_period_end * 1000);
+                    user.currentPeriodEnd = new Date((subscription as any).current_period_end * 1000);
                     await user.save();
                     console.log(`[WEBHOOK] ✅ User ${user._id} subscription updated to ${subscription.status}`);
                 } else {
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
                 const invoice = event.data.object as Stripe.Invoice;
                 console.log(`[WEBHOOK] Processing invoice.payment_succeeded: ${invoice.id}`);
 
-                if (invoice.subscription) {
+                if ((invoice as any).subscription) {
                     const user = await User.findOne({ stripeCustomerId: invoice.customer as string });
 
                     if (user) {
@@ -125,7 +125,7 @@ export async function POST(req: NextRequest) {
                 const invoice = event.data.object as Stripe.Invoice;
                 console.log(`[WEBHOOK] Processing invoice.payment_failed: ${invoice.id}`);
 
-                if (invoice.subscription) {
+                if ((invoice as any).subscription) {
                     const user = await User.findOne({ stripeCustomerId: invoice.customer as string });
 
                     if (user) {
